@@ -164,7 +164,8 @@ class PostgresStorage
     man = new LargeObjectManager @db
     man.openAndReadableStream file.objectid, bufferSize, (err, size, stream) ->
       return callback err if err
-      res.set 'Content-Disposition', "attachment; filename=\"#{file.filename}\""
+      if not res.get('Content-Disposition')
+        res.set 'Content-Disposition', "attachment; filename=\"#{file.filename}\""
       res.set 'Content-Type', file.mimetype
       res.set 'Content-Length', size
       stream.pipe res
